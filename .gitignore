@@ -1,3 +1,8 @@
+.terraform/
+
 # ignore access key file
 *.csv
+
+# ignore env file
+.envrc
 
