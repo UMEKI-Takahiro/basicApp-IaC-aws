@@ -26,10 +26,7 @@ jobs:
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
       - name: Download plan file
-        uses: actions/download-artifact@v4
-        with:
-          name: terraform-plan
-          path: ./
+        run: aws s3 cp s3://tfstate-basic-app/terraform-plan/tfplan tfplan
       - name: Terraform init
         run: terraform init
       - name: Terraform apply
