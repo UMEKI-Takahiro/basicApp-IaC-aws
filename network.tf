@@ -24,17 +24,6 @@ resource "aws_internet_gateway" "igw" {
 # public
 ######################
 
-# public subnet 2: PR test 用
-resource "aws_subnet" "public_subnet_2" {
-  vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.64.0/24"
-  availability_zone       = "ap-northeast-1a"
-  map_public_ip_on_launch = true
-  tags = {
-    Name = "basicApp-public-subnet-2"
-  }
-}
-
 # public subnet
 resource "aws_subnet" "public_subnet" {
   vpc_id                  = aws_vpc.vpc.id
