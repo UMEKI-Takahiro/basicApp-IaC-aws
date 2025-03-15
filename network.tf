@@ -25,13 +25,22 @@ resource "aws_internet_gateway" "igw" {
 ######################
 
 # public subnet
-resource "aws_subnet" "public_subnet" {
+resource "aws_subnet" "public_subnet_0" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = "10.0.0.0/24"
   availability_zone       = "ap-northeast-1a"
   map_public_ip_on_launch = true
   tags = {
-    Name = "basicApp-public-subnet"
+    Name = "basicApp-public-subnet-0"
+  }
+}
+resource "aws_subnet" "public_subnet_1" {
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = "10.0.1.0/24"
+  availability_zone       = "ap-northeast-1c"
+  map_public_ip_on_launch = true
+  tags = {
+    Name = "basicApp-public-subnet-1"
   }
 }
 
@@ -48,9 +57,46 @@ resource "aws_route_table" "public_route_table" {
 }
 
 # associate public subnet and route table
-resource "aws_route_table_association" "public_association" {
-  subnet_id      = aws_subnet.public_subnet.id
+resource "aws_route_table_association" "public_0_association" {
+  subnet_id      = aws_subnet.public_subnet_0.id
   route_table_id = aws_route_table.public_route_table.id
+}
+resource "aws_route_table_association" "public_1_association" {
+  subnet_id      = aws_subnet.public_subnet_1.id
+  route_table_id = aws_route_table.public_route_table.id
+}
+
+# security group for lb
+resource "aws_security_group" "sg_for_lb" {
+  name   = "sg_for_lb"
+  vpc_id = aws_vpc.vpc.id
+  tags = {
+    Name = "sg-for-lb"
+  }
+}
+resource "aws_security_group_rule" "sg_egress_rule_for_lb" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.sg_for_lb.id
+}
+resource "aws_security_group_rule" "sg_ingress_rule_for_lb_http" {
+  type              = "ingress"
+  from_port         = "80"
+  to_port           = "80"
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.sg_for_lb.id
+}
+resource "aws_security_group_rule" "sg_ingress_rule_for_lb_https" {
+  type              = "ingress"
+  from_port         = "443"
+  to_port           = "443"
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.sg_for_lb.id
 }
 
 ######################
