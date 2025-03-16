@@ -27,14 +27,29 @@ resource "aws_lb_listener" "http" {
   port              = 80
   protocol          = "HTTP"
   default_action {
-    type = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "Hello, HTTP (80)!"
-      status_code  = 200
+    type = "redirect"
+    redirect {
+      port        = 443
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
     }
   }
 }
 
 # listener for https (443)
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.alb.arn
+  port              = 443
+  protocol          = "HTTPS"
+  certificate_arn   = aws_acm_certificate.acm.arn
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  default_action {
+    type = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Hello, HTTPS (443)!"
+      status_code  = 200
+    }
+  }
+}
 
