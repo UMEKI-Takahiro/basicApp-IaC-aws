@@ -13,6 +13,21 @@ resource "aws_route53_record" "dns_record" {
   }
 }
 
+resource "aws_route53_record" "certificate" {
+  for_each = {
+    for dvo in aws_acm_certificate.acm.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+  name    = each.value.name
+  type    = each.value.type
+  records = [each.value.record]
+  zone_id = data.aws_route53_zone.hosted_zone.id
+  ttl     = 60
+}
+
 output "domain_name" {
   value = aws_route53_record.dns_record.name
 }
