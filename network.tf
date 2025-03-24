@@ -174,12 +174,20 @@ resource "aws_security_group_rule" "sg_ingress_rule_for_app" {
 }
 
 # private subnet for db server
-resource "aws_subnet" "private_subnet_for_db" {
+resource "aws_subnet" "private_subnet_for_db_1" {
   vpc_id            = aws_vpc.vpc.id
   cidr_block        = "10.0.48.0/24"
   availability_zone = "ap-northeast-1a"
   tags = {
-    Name = "basicApp-private-subnet-for-db"
+    Name = "basicApp-private-subnet-for-db-1"
+  }
+}
+resource "aws_subnet" "private_subnet_for_db_2" {
+  vpc_id            = aws_vpc.vpc.id
+  cidr_block        = "10.0.49.0/24"
+  availability_zone = "ap-northeast-1c"
+  tags = {
+    Name = "basicApp-private-subnet-for-db-2"
   }
 }
 
@@ -201,8 +209,8 @@ resource "aws_security_group_rule" "sg_egress_rule_for_db" {
 }
 resource "aws_security_group_rule" "sg_ingress_rule_for_db" {
   type              = "ingress"
-  from_port         = "80"
-  to_port           = "80"
+  from_port         = 3306
+  to_port           = 3306
   protocol          = "tcp"
   cidr_blocks       = ["10.0.32.0/24"]
   security_group_id = aws_security_group.sg_for_db.id
