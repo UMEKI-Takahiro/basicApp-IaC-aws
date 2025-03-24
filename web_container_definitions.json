@@ -1,7 +1,7 @@
 [
   {
     "name": "web-server",
-    "image": "nginx:latest",
+    "image": "533267018354.dkr.ecr.ap-northeast-1.amazonaws.com/basic-app-web-ecr:1.0.0",
     "essential": true,
     "portMappings": [
       {
