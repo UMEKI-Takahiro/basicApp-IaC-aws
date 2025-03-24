@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "ecr" {
-  name = "ecr"
+  name = "basic-app-ecr"
 }
 
 resource "aws_ecr_lifecycle_policy" "ecr_lifecycle_policy" {
