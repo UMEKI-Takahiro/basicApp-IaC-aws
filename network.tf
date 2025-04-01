@@ -159,7 +159,7 @@ resource "aws_security_group_rule" "sg_ingress_rule_for_web" {
 resource "aws_subnet" "private_subnet_for_app" {
   vpc_id            = aws_vpc.vpc.id
   cidr_block        = "10.0.32.0/24"
-  availability_zone = "ap-northeast-1a"
+  availability_zone = "ap-northeast-1c"
   tags = {
     Name = "basicApp-private-subnet-for-app"
   }
