@@ -148,12 +148,20 @@ resource "aws_security_group_rule" "sg_egress_rule_for_web" {
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.sg_for_web.id
 }
-resource "aws_security_group_rule" "sg_ingress_rule_for_web" {
+resource "aws_security_group_rule" "sg_ingress_rule_http_for_web" {
   type              = "ingress"
-  from_port         = "80"
-  to_port           = "80"
+  from_port         = 80
+  to_port           = 80
   protocol          = "tcp"
   cidr_blocks       = ["10.0.0.0/24"]
+  security_group_id = aws_security_group.sg_for_web.id
+}
+resource "aws_security_group_rule" "sg_ingress_rule_https_for_web" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["10.0.0.0/16"]
   security_group_id = aws_security_group.sg_for_web.id
 }
 
@@ -183,12 +191,20 @@ resource "aws_security_group_rule" "sg_egress_rule_for_app" {
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.sg_for_app.id
 }
-resource "aws_security_group_rule" "sg_ingress_rule_for_app" {
+resource "aws_security_group_rule" "sg_ingress_rule_http_for_app" {
   type              = "ingress"
-  from_port         = "80"
-  to_port           = "80"
+  from_port         = 80
+  to_port           = 80
   protocol          = "tcp"
   cidr_blocks       = ["10.0.16.0/24"]
+  security_group_id = aws_security_group.sg_for_app.id
+}
+resource "aws_security_group_rule" "sg_ingress_rule_https_for_app" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["10.0.0.0/16"]
   security_group_id = aws_security_group.sg_for_app.id
 }
 
