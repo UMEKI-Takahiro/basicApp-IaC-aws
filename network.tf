@@ -276,9 +276,10 @@ resource "aws_vpc_endpoint" "ecr_api_endpoint" {
 }
 # ecr dkr endpoint
 resource "aws_vpc_endpoint" "ecr_dkr_endpoint" {
-  vpc_id            = aws_vpc.vpc.id
-  service_name      = "com.amazonaws.ap-northeast-1.ecr.dkr"
-  vpc_endpoint_type = "Interface"
+  vpc_id              = aws_vpc.vpc.id
+  service_name        = "com.amazonaws.ap-northeast-1.ecr.dkr"
+  vpc_endpoint_type   = "Interface"
+  private_dns_enabled = true
   subnet_ids = [
     aws_subnet.private_subnet_for_web.id,
     aws_subnet.private_subnet_for_app.id,
