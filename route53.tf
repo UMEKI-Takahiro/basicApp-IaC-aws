@@ -1,3 +1,6 @@
+##################
+# public domain
+##################
 data "aws_route53_zone" "hosted_zone" {
   name = "takahiro2.com"
 }
@@ -30,5 +33,33 @@ resource "aws_route53_record" "certificate" {
 
 output "domain_name" {
   value = aws_route53_record.dns_record.name
+}
+
+##################
+# local domain
+##################
+resource "aws_route53_zone" "private_zone" {
+  name = "local"
+  vpc {
+    vpc_id = aws_vpc.vpc.id
+  }
+  force_destroy = true
+  comment       = "Private Hosted Zone for .local domains"
+}
+
+resource "aws_route53_record" "app_record" {
+  zone_id = aws_route53_zone.private_zone.zone_id
+  name    = "app.local"
+  type    = "CNAME"
+  ttl     = 300
+  records = ["10.0.16.51"]
+}
+
+resource "aws_route53_record" "db_record" {
+  zone_id = aws_route53_zone.private_zone.zone_id
+  name    = "db.local"
+  type    = "CNAME"
+  ttl     = 300
+  records = [aws_db_instance.basic-app-db.endpoint]
 }
 
