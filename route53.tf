@@ -50,9 +50,9 @@ resource "aws_route53_zone" "private_zone" {
 resource "aws_route53_record" "app_record" {
   zone_id = aws_route53_zone.private_zone.zone_id
   name    = "app.local"
-  type    = "CNAME"
+  type    = "A"
   ttl     = 300
-  records = ["10.0.16.51"]
+  records = ["10.0.32.29"]
 }
 
 resource "aws_route53_record" "db_record" {
