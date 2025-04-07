@@ -199,6 +199,14 @@ resource "aws_security_group_rule" "sg_ingress_rule_http_for_app" {
   cidr_blocks       = ["10.0.16.0/24"]
   security_group_id = aws_security_group.sg_for_app.id
 }
+resource "aws_security_group_rule" "sg_ingress_rule_http_4000_for_app" {
+  type              = "ingress"
+  from_port         = 4000
+  to_port           = 4000
+  protocol          = "tcp"
+  cidr_blocks       = ["10.0.16.0/24"]
+  security_group_id = aws_security_group.sg_for_app.id
+}
 resource "aws_security_group_rule" "sg_ingress_rule_https_for_app" {
   type              = "ingress"
   from_port         = 443
