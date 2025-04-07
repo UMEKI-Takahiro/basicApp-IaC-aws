@@ -47,19 +47,41 @@ resource "aws_route53_zone" "private_zone" {
   comment       = "Private Hosted Zone for .local domains"
 }
 
-resource "aws_route53_record" "app_record" {
-  zone_id = aws_route53_zone.private_zone.zone_id
-  name    = "app.local"
-  type    = "A"
-  ttl     = 300
-  records = ["10.0.32.29"]
-}
-
+# db.local
 resource "aws_route53_record" "db_record" {
   zone_id = aws_route53_zone.private_zone.zone_id
   name    = "db.local"
   type    = "CNAME"
   ttl     = 300
   records = [aws_db_instance.basic-app-db.endpoint]
+}
+
+# app.local
+resource "aws_route53_record" "app_local_cname" {
+  zone_id = aws_route53_zone.private_zone.zone_id
+  name    = "app.local"
+  type    = "CNAME"
+  ttl     = 300
+  records = ["app.asdpdn.local"]
+}
+resource "aws_service_discovery_private_dns_namespace" "asdpdn_local" {
+  name        = "asdpdn.local"
+  description = "Private DNS namespace for ECS service discovery"
+  vpc         = aws_vpc.vpc.id
+}
+resource "aws_service_discovery_service" "asds" {
+  name = "app"
+  dns_config {
+    namespace_id = aws_service_discovery_private_dns_namespace.asdpdn_local.id
+    dns_records {
+      ttl  = 10
+      type = "A"
+    }
+    routing_policy = "MULTIVALUE"
+  }
+
+  health_check_custom_config {
+    failure_threshold = 1
+  }
 }
 
