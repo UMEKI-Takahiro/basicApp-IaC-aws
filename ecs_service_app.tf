@@ -13,6 +13,11 @@ resource "aws_ecs_service" "ecs_service_app" {
       aws_subnet.private_subnet_for_app.id
     ]
   }
+  service_registries {
+    registry_arn   = aws_service_discovery_service.asds.arn
+    container_name = "app-server"
+  }
+  depends_on = [aws_service_discovery_service.asds]
   lifecycle {
     ignore_changes = [task_definition]
   }
