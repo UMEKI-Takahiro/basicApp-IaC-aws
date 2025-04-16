@@ -8,6 +8,12 @@
         "protocol": "tcp",
         "containerPort": 80
       }
+    ],
+    "environment": [
+      {
+        "name": "LOCAL_APP_DOMAIN",
+        "value": "app.local"
+      }
     ]
   }
 ]
